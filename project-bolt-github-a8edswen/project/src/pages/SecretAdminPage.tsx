@@ -5,8 +5,9 @@ import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { sanitizeText, RateLimiter } from '@/lib/security';
 
-const ADMIN_PASSWORD = 'EstatePro@Admin2026!';
-const ADMIN_EMAIL = 'admin@estatepro.internal';
+const ADMIN_GATE_PASSWORD = 'EstatePro@Admin2026!';
+const ADMIN_AUTH_EMAIL = 'admin@estate.demo';
+const ADMIN_AUTH_PASSWORD = 'demo1234';
 const accessLimiter = new RateLimiter(3000);
 
 export default function SecretAdminPage() {
@@ -30,7 +31,7 @@ export default function SecretAdminPage() {
 
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    if (sanitizeText(password, 100) !== ADMIN_PASSWORD) {
+    if (sanitizeText(password, 100) !== ADMIN_GATE_PASSWORD) {
       setError('Incorrect password. Access denied.');
       setLoading(false);
       return;
@@ -38,8 +39,8 @@ export default function SecretAdminPage() {
 
     // Sign in the pre-provisioned admin account so RLS-protected writes work.
     const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: ADMIN_EMAIL,
-      password: ADMIN_PASSWORD,
+      email: ADMIN_AUTH_EMAIL,
+      password: ADMIN_AUTH_PASSWORD,
     });
 
     if (signInError) {
